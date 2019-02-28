@@ -39,8 +39,9 @@ function AddOffers(count) {
                 "y": locationY
             }
         };
-        console.log(OfferObj);
+        listAd.push(OfferObj);
     }
+    console.log(listAd);
     return listAd;
 }
 
