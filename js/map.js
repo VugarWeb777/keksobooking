@@ -91,7 +91,6 @@ function AppendPins() {
     mapPinsOut.appendChild(fragment);
 }
 
-AppendPins();
 
 function RenderOffers(arr) {
     var OfferItem = Template.content.querySelector('.map__card').cloneNode(true);
@@ -158,6 +157,5 @@ function AppendOffers() {
     return map.insertBefore(OfferFragment,mapFilterContainer);
 }
 
-AppendOffers();
 
 
