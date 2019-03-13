@@ -23,6 +23,7 @@ function FormActivate() {
     FormDisabled(false);
     AppendPins();
     AppendOffers();
+    console.log("FormActivate ()");
 }
 
 function SetFocusOnAddress(){
@@ -37,6 +38,7 @@ buttonMapPin.addEventListener("mouseup",function (evt) {
     SetFocusOnAddress();
     address.value = evt.pageX + "," + evt.pageY;
 });
+
 
 
 

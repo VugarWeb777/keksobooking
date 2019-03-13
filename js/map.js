@@ -73,12 +73,32 @@ function createOffers() {
 
 createOffers();
 
-function RenderPins(arr) {
+
+
+function mapPinsOnClickRender(evt) {
+    if (evt.currentTarget.classList.contains("map__pin") && !evt.currentTarget.classList.contains("map__pin--main")){
+        var pinIndex = evt.currentTarget.dataset.markerIndex;
+
+        var mapCards = document.querySelectorAll(".map__card");
+
+        for (let i = 0; i < mapCards.length; i++) {
+            mapCards[i].style.display = "none";
+            mapCards[pinIndex].style.display = "block";
+        }
+    }
+}
+
+
+
+
+function RenderPins(arr,index) {
     var pinItem = Template.content.querySelector('.map__pin').cloneNode(true);
+    pinItem.dataset.markerIndex = index;
     pinItem.style.left = arr.location.x + "px";
     pinItem.style.top = arr.location.y + "px";
     pinItem.querySelector('img').src = arr.author.avatar;
     pinItem.querySelector('img').alt = arr.offer.title;
+    pinItem.addEventListener("click",mapPinsOnClickRender);
     return pinItem;
 }
 
@@ -86,18 +106,20 @@ function AppendPins() {
     var fragment = document.createDocumentFragment();
     var mapPinsOut = document.querySelector('.map__pins');
     for (var i = 0; i < listAd.length; i++) {
-        fragment.appendChild(RenderPins(listAd[i]))
+        fragment.appendChild(RenderPins(listAd[i],i))
     }
     mapPinsOut.appendChild(fragment);
 }
 
 
-function RenderOffers(arr) {
+function RenderOffers(arr,index) {
     var OfferItem = Template.content.querySelector('.map__card').cloneNode(true);
     var featuresContainer = OfferItem.querySelector('.popup__features');
     var picturesContainer = OfferItem.querySelector('.popup__pictures');
     var offerType = OfferItem.querySelector('.popup__type');
 
+    OfferItem.style.display = "none";
+    OfferItem.dataset.cardIndex = index;
     OfferItem.querySelector('.popup__avatar').src = arr.author.avatar;
     OfferItem.querySelector('.popup__title').textContent = arr.offer.title;
     OfferItem.querySelector('.popup__text--address').textContent = arr.offer.address;
@@ -152,9 +174,9 @@ function AppendOffers() {
     var mapFilterContainer = map.querySelector('.map__filters-container');
     var OfferFragment = document.createDocumentFragment();
     for (var i = 0; i < listAd.length; i++) {
-        OfferFragment.appendChild(RenderOffers(listAd[i]));
+        OfferFragment.appendChild(RenderOffers(listAd[i],i));
     }
-    return map.insertBefore(OfferFragment,mapFilterContainer);
+    return map.insertBefore(OfferFragment, mapFilterContainer);
 }
 
 
