@@ -85,6 +85,12 @@ function mapPinsOnClickRender(evt) {
             mapCards[i].style.display = "none";
             mapCards[pinIndex].style.display = "block";
         }
+        var PopupClose =  function (event) {
+            event.preventDefault();
+            var currentPopup = event.target.parentNode;
+            currentPopup.style.display = "none";
+        };
+        mapCards[pinIndex].querySelector(".popup__close").addEventListener("click",PopupClose);
     }
 }
 

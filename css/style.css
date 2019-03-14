@@ -377,6 +377,7 @@ textarea:focus {
 .popup__pictures{
     display: flex;
     justify-content: space-evenly;
+    padding-left: 0;
 }
 
 .popup__pictures li {
