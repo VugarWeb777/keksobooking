@@ -264,34 +264,11 @@
                                                                    draggable="false"></button>
 </template>
 
+<script src="js/data.js"></script>
+<script src="js/render-pins.js"></script>
+<script src="js/render-offers.js"></script>
 <script src="js/map.js"></script>
 <script src="js/form.js"></script>
-<script>
-    var selectType = document.getElementById("type");
-    var price = document.getElementById("price");
-    selectType.addEventListener("change", function () {
-        for (var i = 0; i < selectType.options.length; i++) {
-            var option = selectType.options[i];
-            if (option.value === "bungalo" && option.selected) {
-                price.setAttribute("min", "0");
-                price.placeholder = "0";
-            }
-            if (option.value === "flat" && option.selected) {
-                price.setAttribute("min", "1000");
-                price.placeholder = "1000";
-            }
-            if (option.value === "palace" && option.selected) {
-                price.setAttribute("min", "10000");
-                price.placeholder = "10000";
-            }
-            if (option.value === "house" && option.selected) {
-                price.setAttribute("min", "5000");
-                price.placeholder = "5000";
-            }
-        }
-    });
-
-</script>
 
 </body>
 </html>
