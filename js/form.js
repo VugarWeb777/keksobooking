@@ -1,11 +1,11 @@
 "use strict";
 
 (function () {
-    var form = document.querySelector(".notice__form");
     var map = document.querySelector(".map");
     var buttonMapPin = document.querySelector(".map__pin--main");
     var address = document.querySelector("#address");
 
+    var form = document.forms['notice__form'];
 
 
     function FormDisabled(boolean) {
@@ -19,11 +19,13 @@
 
     FormDisabled(true);
 
+    var formActivated = false;
+
     function FormActivate() {
         form.classList.remove("notice__form--disabled");
         FormDisabled(false);
-        AppendPins();
-        AppendOffers();
+        formActivated = true;
+        window.backend.load(AppendOffers);
         console.log("FormActivate ()");
     }
 
@@ -32,7 +34,14 @@
         address.value = window.startCoords.x + "," + window.startCoords.y;
     }
 
-    buttonMapPin.addEventListener("mouseup",FormActivate);
+    function RemoveFormActivated (){
+        if (formActivated === true) {
+            buttonMapPin.removeEventListener("click",FormActivate);
+        }
+    }
+
+    buttonMapPin.addEventListener("click",FormActivate);
+    buttonMapPin.addEventListener("click",RemoveFormActivated);
 
 
 
@@ -64,4 +73,13 @@
             }
         }
     });
+
+    form.addEventListener("submit",function (evt) {
+        window.backend.save(new FormData(form),function () {
+            console.log("форма успешно отпарвлена!");
+        });
+        evt.preventDefault();
+    });
+
+    //Дописать обработку ошибок при отправке формы, доделать валидацию формы.
 })();

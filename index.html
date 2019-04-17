@@ -12,6 +12,7 @@
     <h1 class="visuallyhidden">Keksobooking. Кексы по соседству</h1>
 </header>
 
+
 <main>
     <section class="map map--faded">
         <div class="map__pins">
@@ -88,7 +89,10 @@
     <div class="notice">
         <h2 class="notice__title">Ваше объявление</h2>
 
-        <form class="notice__form notice__form--disabled" method="post" enctype="multipart/form-data"
+        <form class="notice__form notice__form--disabled"
+              method="POST"
+              enctype="multipart/form-data"
+              name="notice__form"
               autocomplete="off">
             <fieldset class="notice__header">
                 <legend>Ваша фотография (для карты)</legend>
@@ -263,8 +267,8 @@
     <button style="left: 200px; top: 400px;" class="map__pin"><img src="img/avatars/user07.png" width="40" height="40"
                                                                    draggable="false"></button>
 </template>
-
 <script src="js/data.js"></script>
+<script src="js/backend.js"></script>
 <script src="js/render-pins.js"></script>
 <script src="js/render-offers.js"></script>
 <script src="js/map.js"></script>

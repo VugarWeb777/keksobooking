@@ -51,7 +51,7 @@
             featuresContainer.remove();
         }
         if (arr.offer.photos.length > 0) {
-            for (var j = 0; j < arr.offer.photos.length; j++) {
+            for (var j = 0; j < arr.offer.photos.length && j < 4; j++) {
                 var pictureElement = document.createElement('img');
                 pictureElement.src = arr.offer.photos[j];
                 pictureElement.classList.add('popup__photo');
@@ -62,19 +62,19 @@
         } else {
             picturesContainer.remove();
         }
-
+        console.log(arr);
         return OfferItem;
     };
 
 
-    window.AppendOffers = function() {
+    window.AppendOffers = function(arr) {
+        window.RenderPins(arr);
         var map = document.querySelector('.map');
         var mapFilterContainer = map.querySelector('.map__filters-container');
         var OfferFragment = document.createDocumentFragment();
-        for (var i = 0; i < listAd.length; i++) {
-            OfferFragment.appendChild(RenderOffers(listAd[i],i));
+        for (var i = 0; i < arr.length; i++) {
+            OfferFragment.appendChild(RenderOffers(arr[i],i));
         }
         return map.insertBefore(OfferFragment, mapFilterContainer);
-    }
-
+    };
 })();
