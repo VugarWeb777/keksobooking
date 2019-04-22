@@ -706,3 +706,44 @@ textarea:focus {
 .footer-social-item-vk {
   background-position: -10px -10px;
 }
+
+.error{
+  z-index: 100;
+  margin: 0 auto;
+  text-align: center;
+  background-color: red;
+  position: absolute;
+  left:0;
+  right:0;
+  font-size:30px;
+  color: #ffffff;
+  border: 2px solid;
+  border-radius: 10px;
+  animation: anim 1s ease-in-out;
+}
+.success{
+  z-index: 100;
+  margin: 0 auto;
+  text-align: center;
+  background-color: green;
+  position: absolute;
+  left:0;
+  right:0;
+  font-size:30px;
+  color: #ffffff;
+  border: 2px solid;
+  border-radius: 10px;
+  animation: anim 1s ease-in-out;
+}
+
+@keyframes anim {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

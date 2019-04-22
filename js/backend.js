@@ -36,8 +36,10 @@
             xhr.responseType = "json";
 
             xhr.addEventListener("load", function () {
-                if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
                     onLoad(xhr.response);
+                } else {
+                    onError("Ошибка,Форма не отправлена!"+" Статус ответа " + xhr.status + " " + xhr.statusText);
                 }
             });
             xhr.addEventListener("error",function () {

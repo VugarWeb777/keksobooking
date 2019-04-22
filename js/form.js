@@ -26,7 +26,7 @@
         form.classList.remove("notice__form--disabled");
         FormDisabled(false);
         formActivated = true;
-        window.backend.load(AppendOffers);
+        window.backend.load(AppendOffers, errorHandler);
         console.log("FormActivate ()");
     }
 
@@ -84,50 +84,79 @@
                 selectTimein.value = this.value;
                 break;
         }
-        /* if (this === selectTimein){
-             selectTimeout.value = this.value;
-         } else if (this === selectTimeout){
-             selectTimein.value = this.value;
-         }*/
     }
 
 
     //изменение кол-ва комнат для кол-ва гостей
+    var selectRoom = form.querySelector("[name='rooms']");
+    var selectCapacity = form.querySelector("[name='capacity']");
 
-    var room = form.querySelector("[name='rooms']");
-    var capacity = form.querySelector("[name='capacity']");
+    function roomsChangeHandler() {
+        var capacityFor1Room = selectCapacity.querySelectorAll(":not([value='1'])");
+        var capacityFor2Room = selectCapacity.querySelectorAll(":not([value='1']):not([value='2'])");
+        var capacityFor3Room = selectCapacity.querySelectorAll(":not([value='1']):not([value='2']):not([value='3'])");
+        var capacityNotForGuest = selectCapacity.querySelectorAll(":not([value='0'])");
 
-    function roomsChangeHandler (){
-        if (room.value == 1){
-            var currentCapaciy = capacity.querySelectorAll(":not([value='1'])");
-            console.log(currentCapaciy);
-            for (let i = 0; i < currentCapaciy.length; i++) {
-                currentCapaciy[i].setAttribute("hidden","true");
+        for (let i = 0; i < selectCapacity.options.length; i++) {
+            selectCapacity.options[i].disabled = false;
+        }
+
+        if (this === selectRoom) {
+            selectCapacity.value = this.value;
+            switch (selectRoom.value) {
+                case "1" :
+                    capacityFor1Room.forEach(value => value.disabled = true);
+                    break;
+                case "2" :
+                    capacityFor2Room.forEach(value => value.disabled = true);
+                    break;
+                case "3" :
+                    capacityFor3Room.forEach(value => value.disabled = true);
+                    break;
+                default :
+                    capacityNotForGuest.forEach(value => value.disabled = true);
+                    selectCapacity.value = "0";
+                    break;
             }
         }
     }
 
-
-    room.addEventListener("change",roomsChangeHandler);
-
+    //Обработчики
+    selectRoom.addEventListener("change", roomsChangeHandler);
     selectType.addEventListener("change", typeChangeHandler);
     selectTimein.addEventListener("change", timeChangeHandler);
     selectTimeout.addEventListener("change", timeChangeHandler);
-
 
     buttonMapPin.addEventListener("click", FormActivate);
     buttonMapPin.addEventListener("mouseup", SetFocusOnAddress);
     buttonMapPin.addEventListener("click", RemoveFormActivated);
 
 
+    function successHandler() {
+        var node = document.createElement("div");
+        node.classList.add("success");
+
+        node.textContent = "Форма успешно отправлена!";
+        document.body.insertAdjacentElement("afterbegin", node);
+        setTimeout(function () {
+            document.body.removeChild(node);
+        }, 3000);
+    }
+
+    function errorHandler(errorMessage) {
+        var node = document.createElement("div");
+        node.classList.add("error");
+
+        node.textContent = errorMessage;
+        document.body.insertAdjacentElement("afterbegin", node);
+        setTimeout(function () {
+            document.body.removeChild(node);
+        }, 5000);
+    }
+
     //Отправка формы на сервер AJAX
     form.addEventListener("submit", function (evt) {
-        window.backend.save(new FormData(form), function () {
-            console.log("форма успешно отпарвлена!");
-        });
+        window.backend.save(new FormData(form), successHandler, errorHandler);
         evt.preventDefault();
     });
 })();
-
-//Найти селекты времени заезда
-//при выборе selectTimein.options[i] менять значение selectTimeout.options[i].va
