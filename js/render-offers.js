@@ -10,7 +10,7 @@
         return el;
     }
 
-    window.RenderOffers = function (arr,index) {
+    window.RenderOffers = function (arr, index) {
         var OfferItem = Template.content.querySelector('.map__card').cloneNode(true);
         var featuresContainer = OfferItem.querySelector('.popup__features');
         var picturesContainer = OfferItem.querySelector('.popup__pictures');
@@ -62,19 +62,19 @@
         } else {
             picturesContainer.remove();
         }
-        console.log(arr);
         return OfferItem;
     };
 
 
-    window.AppendOffers = function(arr) {
+    window.AppendOffers = function (arr) {
         window.RenderPins(arr);
-        var map = document.querySelector('.map');
-        var mapFilterContainer = map.querySelector('.map__filters-container');
-        var OfferFragment = document.createDocumentFragment();
-        for (var i = 0; i < arr.length; i++) {
-            OfferFragment.appendChild(RenderOffers(arr[i],i));
+
+        var takeNumber = arr.length > 5 ? 5 : arr.length;
+        var mapCardsDiv = document.querySelector(".map__card--renders");
+        mapCardsDiv.innerHTML = "";
+
+        for (var i = 0; i < takeNumber; i++) {
+            mapCardsDiv.appendChild(RenderOffers(arr[i], i));
         }
-        return map.insertBefore(OfferFragment, mapFilterContainer);
     };
 })();

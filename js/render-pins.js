@@ -25,8 +25,10 @@
 
     window.RenderPins = function (arr) {
         var mapPins = document.querySelector('.map__pins');
+        var takeNumber = arr.length > 5 ? 5 : arr.length;
+        mapPins.innerHTML = "";
 
-        for (let i = 0; i < arr.length; i++) {
+        for (let i = 0; i < takeNumber; i++) {
             var pinItem = Template.content.querySelector('.map__pin').cloneNode(true);
             pinItem.dataset.markerIndex = i;
             pinItem.style.left = arr[i].location.x + "px";
