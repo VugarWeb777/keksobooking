@@ -2,7 +2,6 @@
 
 (function () {
     var form = document.forms['notice__form'];
-    var map__filters = document.querySelector(".map__filters");
     var buttonMapPin = document.querySelector(".map__pin--main");
     var address = document.querySelector("#address");
 
@@ -25,11 +24,10 @@
 
     function FormActivate() {
         form.classList.remove("notice__form--disabled");
-        map__filters.style.opacity = "1";
         FormDisabled(false);
         formActivated = true;
-        window.backend.load(window.GetOffers, errorHandler);
-        console.log("Form is Activated");
+        window.backend.load(AppendOffers, errorHandler);
+        console.log("FormActivate ()");
     }
 
     //Установка фокуса на адрес
@@ -49,15 +47,33 @@
     //изменение цены и типа жилья
     var selectType = form.querySelector("[name='type']");
 
-    function typeChangeHandler(evt) {
+    function typeChangeHandler() {
         var price = document.getElementById("price");
-        price.placeholder = OFFER_TYPES[evt.target.value].price;
+        for (var i = 0; i < selectType.options.length; i++) {
+            var option = selectType.options[i];
+            if (option.value === "bungalo" && option.selected) {
+                price.setAttribute("min", "0");
+                price.placeholder = "0";
+            }
+            if (option.value === "flat" && option.selected) {
+                price.setAttribute("min", "1000");
+                price.placeholder = "1000";
+            }
+            if (option.value === "palace" && option.selected) {
+                price.setAttribute("min", "10000");
+                price.placeholder = "10000";
+            }
+            if (option.value === "house" && option.selected) {
+                price.setAttribute("min", "5000");
+                price.placeholder = "5000";
+            }
+        }
     }
 
 
     //изменение времени заезда и выезда
-    var selectTimein = form["timein"];
-    var selectTimeout = form["timeout"];
+    var selectTimein = form.querySelector("[name='timein']");
+    var selectTimeout = form.querySelector("[name='timeout']");
 
     function timeChangeHandler() {
         switch (this) {
@@ -72,8 +88,8 @@
 
 
     //изменение кол-ва комнат для кол-ва гостей
-    var selectRoom = form["rooms"];
-    var selectCapacity = form["capacity"];
+    var selectRoom = form.querySelector("[name='rooms']");
+    var selectCapacity = form.querySelector("[name='capacity']");
 
     function roomsChangeHandler() {
         var capacityFor1Room = selectCapacity.querySelectorAll(":not([value='1'])");
@@ -116,6 +132,16 @@
     buttonMapPin.addEventListener("click", RemoveFormActivated);
 
 
+    function successHandler() {
+        var node = document.createElement("div");
+        node.classList.add("success");
+
+        node.textContent = "Форма успешно отправлена!";
+        document.body.insertAdjacentElement("afterbegin", node);
+        setTimeout(function () {
+            document.body.removeChild(node);
+        }, 3000);
+    }
 
     function errorHandler(errorMessage) {
         var node = document.createElement("div");
@@ -130,18 +156,7 @@
 
     //Отправка формы на сервер AJAX
     form.addEventListener("submit", function (evt) {
-        window.backend.save(new FormData(form), SuccessSend, errorHandler);
+        window.backend.save(new FormData(form), successHandler, errorHandler);
         evt.preventDefault();
     });
-
-    function SuccessSend() {
-        var node = document.createElement("div");
-        node.classList.add("success");
-
-        node.textContent = "Форма успешно отправлена!";
-        document.body.insertAdjacentElement("afterbegin", node);
-        setTimeout(function () {
-            document.body.removeChild(node);
-        }, 3000);
-    }
 })();

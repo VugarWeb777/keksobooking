@@ -2,6 +2,24 @@
 
 (function () {
     window.Template = document.querySelector('template');
+    window.offerTypes = {
+        flat: {
+            name: 'Квартира',
+            price: '1000'
+        },
+        house: {
+            name: 'Дом',
+            price: '5000'
+        },
+        palace: {
+            name: 'Дворец',
+            price: '10000'
+        },
+        bungalo: {
+            name: 'Бунгало',
+            price: '0'
+        }
+    };
 
     window.OFFER_TYPES = {
         flat: {
@@ -26,7 +44,7 @@
         return Math.floor(Math.random() * (max - min) + min);
     }
 
-    window.getRandomIndex  = function(arr) {
+    window.getRandomIndex = function (arr) {
         return Math.floor(Math.random() * arr.length);
     };
 
