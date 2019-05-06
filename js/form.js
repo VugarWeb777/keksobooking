@@ -154,7 +154,7 @@
         }, 5000);
     }
 
-    //Отправка формы на сервер AJAX
+
     form.addEventListener("submit", function (evt) {
         window.backend.save(new FormData(form), successHandler, errorHandler);
         evt.preventDefault();

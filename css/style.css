@@ -747,3 +747,6 @@ textarea:focus {
     opacity: 1;
   }
 }
+ul.popup__features {
+  padding: 0;
+}

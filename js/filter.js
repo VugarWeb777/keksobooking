@@ -23,15 +23,14 @@
         'filter-conditioner': false
     };
 
+    //Сохранение данных
     window.GetOffers = function (data) {
         offers = data;
         window.AppendOffers(data);
     };
 
-
+    //Фильтр по типу жилья
     var FilterType = function (evt) {
-        priceVal = true;
-
         window.filteredType = offers.slice().filter(function (it) {
             switch (evt.target.value) {
                 case it.offer.type :
@@ -43,30 +42,16 @@
             return value;
         });
         window.AppendOffers(filteredType);
+        priceVal = true;
         return filteredType;
     };
 
+    //Фильтр по цене жилья
     var FilterPrice = function (evt) {
         var middlePrice = 10000;
         var maxPrice = 50000;
-        priceVal = false;
 
-        if (priceVal === false) {
-            var filterPrice = offers.slice().filter(function (it) {
-                switch (evt.target.value) {
-                    case "middle" :
-                        return it.offer.price >= middlePrice && it.offer.price <= maxPrice;
-                    case "low" :
-                        return it.offer.price <= middlePrice;
-                    case "high" :
-                        return it.offer.price >= maxPrice;
-                }
-            }).map(function (value) {
-                return value;
-            });
-            window.AppendOffers(filterPrice);
-        }
-
+        //Фильтр жилья с ценой
         if (priceVal === true) {
             var filteredPriceWithType = window.filteredType.slice().filter(function (it) {
                 switch (evt.target.value) {
@@ -76,11 +61,34 @@
                         return it.offer.price <= middlePrice;
                     case "high" :
                         return it.offer.price >= maxPrice;
+                    case filtersDefaults["housing-price"]:
+                        return it.offer.price;
                 }
             }).map(function (value) {
                 return value;
             });
             window.AppendOffers(filteredPriceWithType);
+            return filteredPriceWithType;
+        }
+        //Фильтр по цене без жилья
+        else {
+            var filterPrice = offers.slice().filter(function (it) {
+                switch (evt.target.value) {
+                    case "middle" :
+                        return it.offer.price >= middlePrice && it.offer.price <= maxPrice;
+                    case "low" :
+                        return it.offer.price <= middlePrice;
+                    case "high" :
+                        return it.offer.price >= maxPrice;
+                    case filtersDefaults["housing-price"]:
+                        return it.offer.price;
+
+                }
+            }).map(function (value) {
+                return value;
+            });
+            window.AppendOffers(filterPrice);
+            return filterPrice;
         }
     };
 
