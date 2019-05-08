@@ -30,69 +30,54 @@
     };
 
     //Фильтр по типу жилья
-    var FilterType = function (evt) {
-        window.filteredType = offers.slice().filter(function (it) {
+    var FilterByType = function (evt) {
+        var filteredType = offers.slice().filter(function (it) {
+            return evt.target.value === filtersDefaults["housing-type"] ? true : evt.target.value === it.offer.type;
+        }).map(value => value);
+        window.AppendOffers(filteredType);
+    };
+
+
+    //Фильтр по цене жилья
+    var FilterByPrice = function (evt) {
+        var middlePrice = 10000;
+        var maxPrice = 50000;
+
+        //Фильтр по цене без жилья
+        var filterPrice = offers.slice().filter(function (it) {
             switch (evt.target.value) {
-                case it.offer.type :
-                    return it.offer.type;
-                case filtersDefaults["housing-type"] :
-                    return it.offer.type;
+                case "middle" :
+                    return it.offer.price >= middlePrice && it.offer.price <= maxPrice;
+                case "low" :
+                    return it.offer.price <= middlePrice;
+                case "high" :
+                    return it.offer.price >= maxPrice;
+                case filtersDefaults["housing-price"]:
+                    return it.offer.price;
             }
         }).map(function (value) {
             return value;
         });
-        window.AppendOffers(filteredType);
-        priceVal = true;
-        return filteredType;
-    };
-
-    //Фильтр по цене жилья
-    var FilterPrice = function (evt) {
-        var middlePrice = 10000;
-        var maxPrice = 50000;
-
-        //Фильтр жилья с ценой
-        if (priceVal === true) {
-            var filteredPriceWithType = window.filteredType.slice().filter(function (it) {
-                switch (evt.target.value) {
-                    case "middle" :
-                        return it.offer.price >= middlePrice && it.offer.price <= maxPrice;
-                    case "low" :
-                        return it.offer.price <= middlePrice;
-                    case "high" :
-                        return it.offer.price >= maxPrice;
-                    case filtersDefaults["housing-price"]:
-                        return it.offer.price;
-                }
-            }).map(function (value) {
-                return value;
-            });
-            window.AppendOffers(filteredPriceWithType);
-            return filteredPriceWithType;
-        }
-        //Фильтр по цене без жилья
-        else {
-            var filterPrice = offers.slice().filter(function (it) {
-                switch (evt.target.value) {
-                    case "middle" :
-                        return it.offer.price >= middlePrice && it.offer.price <= maxPrice;
-                    case "low" :
-                        return it.offer.price <= middlePrice;
-                    case "high" :
-                        return it.offer.price >= maxPrice;
-                    case filtersDefaults["housing-price"]:
-                        return it.offer.price;
-
-                }
-            }).map(function (value) {
-                return value;
-            });
-            window.AppendOffers(filterPrice);
-            return filterPrice;
-        }
+        window.AppendOffers(filterPrice);
     };
 
 
-    housingType.addEventListener("change", FilterType);
-    housingPrice.addEventListener("change", FilterPrice);
+    var FilterByRooms = function (evt) {
+        var filterRooms = offers.slice().filter(function (it) {
+            return evt.target.value === filtersDefaults["housing-rooms"] ? true : evt.target.value === it.offer.rooms.toString();
+        }).map(value => value);
+        window.AppendOffers(filterRooms);
+    };
+
+    var FilterByGuests = function (evt) {
+        var filterGuests = offers.slice().filter(function (it) {
+            return evt.target.value === filtersDefaults["housing-guests"] ? true : evt.target.value === it.offer.guests.toString();
+        }).map(value => value);
+        window.AppendOffers(filterGuests);
+    };
+
+    housingType.addEventListener("change", FilterByType);
+    housingPrice.addEventListener("change", FilterByPrice);
+    housingRooms.addEventListener("change", FilterByRooms);
+    housingGuests.addEventListener("change", FilterByGuests);
 })();
