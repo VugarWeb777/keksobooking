@@ -21,24 +21,18 @@
         }
     };
 
-    window.OFFER_TYPES = {
-        flat: {
-            name: 'Квартира',
-            price: '1000'
-        },
-        house: {
-            name: 'Дом',
-            price: '5000'
-        },
-        palace: {
-            name: 'Дворец',
-            price: '10000'
-        },
-        bungalo: {
-            name: 'Бунгало',
-            price: '0'
-        }
+    window.debounce =  function (callback) {
+        var DEBOUNCE_INTERVAL = 300;
+        var lastTimeout;
+
+        window.debounce = function (callback) {
+            if (lastTimeout){
+                window.clearTimeout(lastTimeout);
+            }
+            lastTimeout = window.setTimeout(callback,DEBOUNCE_INTERVAL);
+        };
     };
+
 
     function getRandomNum(min, max) {
         return Math.floor(Math.random() * (max - min) + min);
