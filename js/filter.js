@@ -9,7 +9,6 @@
 
     var offers = [];
 
-
     //Сохранение данных
     window.GetOffers = function (data) {
         offers = data;
@@ -56,7 +55,7 @@
                     return item.offer.features.includes(element.value);
                 });
             }).map(value => value);
-        window.debounce(window.AppendOffers(filterData));
+        window.util.debounce(window.AppendOffers(filterData));
     };
 
     formFilter.addEventListener("change", Filtering);
