@@ -4,54 +4,57 @@
     var form = document.forms['notice__form'];
     var map__filters = document.querySelector(".map__filters");
     var buttonMapPin = document.querySelector(".map__pin--main");
-
+    var address = document.querySelector("#address");
+    var formActivated = false;
 
 //Активация Формы
-    window.Form = function () {
-        var address = document.querySelector("#address");
-        var formActivated = false;
+    var Form = {
 
-        function FormDisabled(boolean) {
+        FormDisabledFieldests: function (boolean) {
             var Fieldsets = document.querySelector(".notice__form ").querySelectorAll("fieldset");
-
             for (let i = 0; i < Fieldsets.length; i++) {
                 var disabledFieldset = Fieldsets[i].disabled = boolean;
             }
-            return disabledFieldset;
-        }
-
-        function FormActivate() {
+        },
+        FormRemove: function () {
+            formActivated = false;
+            form.classList.add("notice__form--disabled");
+            map__filters.style.opacity = "0";
+            document.querySelector(".map__pins").innerHTML = "";
+            var articleOffers = document.querySelectorAll(".map__card");
+            articleOffers.forEach(value => value.remove());
+            Form.FormDisabledFieldests(true);
+        },
+        FormActivate: function () {
             form.classList.remove("notice__form--disabled");
             map__filters.style.opacity = "1";
-            FormDisabled(false);
+            Form.FormDisabledFieldests(false);
             formActivated = true;
             window.backend.load(window.GetOffers, errorHandler);
-            console.log("form activate");
-        }
+        },
 
-        function SetFocusOnAddress() {
+        SetFocusOnAddress: function () {
             address.focus();
             address.value = window.startCoords.x + "," + window.startCoords.y;
-        }
+        },
 
-        function RemoveFormActivated() {
+        RemoveFormActivated: function () {
             if (formActivated === true) {
-                buttonMapPin.removeEventListener("click", FormActivate);
+                buttonMapPin.removeEventListener("click", Form.FormActivate);
             }
-        }
-
-        //Блокировка формы при загрузке страницы
-        window.addEventListener("load", function () {
-            FormDisabled(true);
-        });
-
-        //Обработчики кнопки MapPin
-        buttonMapPin.addEventListener("click", FormActivate);
-        buttonMapPin.addEventListener("mouseup", SetFocusOnAddress);
-        buttonMapPin.addEventListener("click", RemoveFormActivated);
+            buttonMapPin.addEventListener("click", Form.FormActivate);
+        },
     };
 
-    window.Form();
+    //Блокировка формы при загрузке страницы
+    window.addEventListener("load", function () {
+        Form.FormDisabledFieldests(true);
+    });
+
+    //Обработчики кнопки MapPin
+    buttonMapPin.addEventListener("click", Form.FormActivate);
+    buttonMapPin.addEventListener("mouseup", Form.SetFocusOnAddress);
+    buttonMapPin.addEventListener("click", Form.RemoveFormActivated);
 
 
 //Изменение формы
@@ -147,5 +150,7 @@
         setTimeout(function () {
             document.body.removeChild(node);
         }, 3000);
+        Form.FormRemove();
+        document.querySelector(".map__pins").innerHTML = "<div class='map__pinsoverlay'><h2>И снова Токио!</h2></div>"
     }
 })();
