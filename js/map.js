@@ -22,7 +22,7 @@
                 y: startCoords.y - moveEvt.clientY
             };
 
-            startCoords = {
+            window.startCoords = {
                 x: moveEvt.clientX,
                 y: moveEvt.clientY
             };

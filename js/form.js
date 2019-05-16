@@ -2,9 +2,12 @@
 
 (function () {
     var form = document.forms['notice__form'];
+    var map = document.querySelector(".map");
+    var map__pins = document.querySelector(".map__pins");
     var map__filters = document.querySelector(".map__filters");
     var buttonMapPin = document.querySelector(".map__pin--main");
     var address = document.querySelector("#address");
+
     var formActivated = false;
 
 //Активация Формы
@@ -19,18 +22,19 @@
         FormRemove: function () {
             formActivated = false;
             form.classList.add("notice__form--disabled");
+            map.classList.add("map--faded");
             map__filters.style.opacity = "0";
-            document.querySelector(".map__pins").innerHTML = "";
-            var articleOffers = document.querySelectorAll(".map__card");
-            articleOffers.forEach(value => value.remove());
+            document.querySelector(".map__pins").childNodes.forEach(value => value.remove());
+            document.querySelectorAll(".map__card").forEach(value => value.remove());
             Form.FormDisabledFieldests(true);
         },
         FormActivate: function () {
+            formActivated = true;
             form.classList.remove("notice__form--disabled");
+            map.classList.remove("map--faded");
             map__filters.style.opacity = "1";
             Form.FormDisabledFieldests(false);
-            formActivated = true;
-            window.backend.load(window.GetOffers, errorHandler);
+            window.backend.load(window.GetOffers, FormSend.errorHandler);
         },
 
         SetFocusOnAddress: function () {
@@ -58,21 +62,20 @@
 
 
 //Изменение формы
-    window.ChangeForm = function () {
-        var selectType = form.querySelector("[name='type']");
-        var selectTimein = form["timein"];
-        var selectTimeout = form["timeout"];
-        var selectRoom = form["rooms"];
-        var selectCapacity = form["capacity"];
+    var selectType = form.querySelector("[name='type']");
+    var selectTimein = form["timein"];
+    var selectTimeout = form["timeout"];
+    var selectRoom = form["rooms"];
+    var selectCapacity = form["capacity"];
 
-        //изменение цены и типа жилья
-        function typeChangeHandler(evt) {
+
+    var FormChange = {
+
+        typeChangeHandler: function (evt) {
             var price = document.getElementById("price");
             price.placeholder = offerTypes[evt.target.value].price;
-        }
-
-        //изменение времени заезда и выезда
-        function timeChangeHandler() {
+        },
+        timeChangeHandler: function () {
             switch (this) {
                 case selectTimein :
                     selectTimeout.value = this.value;
@@ -81,10 +84,8 @@
                     selectTimein.value = this.value;
                     break;
             }
-        }
-
-        //изменение кол-ва комнат для кол-ва гостей
-        function roomsChangeHandler() {
+        },
+        roomsChangeHandler: function () {
             var capacityFor1Room = selectCapacity.querySelectorAll(":not([value='1'])");
             var capacityFor2Room = selectCapacity.querySelectorAll(":not([value='1']):not([value='2'])");
             var capacityFor3Room = selectCapacity.querySelectorAll(":not([value='1']):not([value='2']):not([value='3'])");
@@ -112,45 +113,44 @@
                         break;
                 }
             }
-        }
-
-        //Обработчики селектов
-        selectRoom.addEventListener("change", roomsChangeHandler);
-        selectType.addEventListener("change", typeChangeHandler);
-        selectTimein.addEventListener("change", timeChangeHandler);
-        selectTimeout.addEventListener("change", timeChangeHandler);
+        },
     };
 
-    window.ChangeForm();
+    //Обработчики селектов
+    selectRoom.addEventListener("change", FormChange.roomsChangeHandler);
+    selectType.addEventListener("change", FormChange.typeChangeHandler);
+    selectTimein.addEventListener("change", FormChange.timeChangeHandler);
+    selectTimeout.addEventListener("change", FormChange.timeChangeHandler);
 
 
 //Отправка формы на сервер
     form.addEventListener("submit", function (evt) {
-        window.backend.save(new FormData(form), SuccessSend, errorHandler);
+        window.backend.save(new FormData(form), FormSend.SuccessSend, FormSend.errorHandler);
         evt.preventDefault();
     });
 
-    function errorHandler(errorMessage) {
-        var node = document.createElement("div");
-        node.classList.add("error");
+    var FormSend = {
+        errorHandler: function (errorMessage) {
+            var node = document.createElement("div");
+            node.classList.add("error");
 
-        node.textContent = errorMessage;
-        document.body.insertAdjacentElement("afterbegin", node);
-        setTimeout(function () {
-            document.body.removeChild(node);
-        }, 5000);
-    }
+            node.textContent = errorMessage;
+            document.body.insertAdjacentElement("afterbegin", node);
+            setTimeout(function () {
+                document.body.removeChild(node);
+            }, 5000);
+        },
+        SuccessSend: function () {
+            var node = document.createElement("div");
+            node.classList.add("success");
 
-    function SuccessSend() {
-        var node = document.createElement("div");
-        node.classList.add("success");
-
-        node.textContent = "Форма успешно отправлена!";
-        document.body.insertAdjacentElement("afterbegin", node);
-        setTimeout(function () {
-            document.body.removeChild(node);
-        }, 3000);
-        Form.FormRemove();
-        document.querySelector(".map__pins").innerHTML = "<div class='map__pinsoverlay'><h2>И снова Токио!</h2></div>"
-    }
+            node.textContent = "Форма успешно отправлена!";
+            document.body.insertAdjacentElement("afterbegin", node);
+            setTimeout(function () {
+                document.body.removeChild(node);
+            }, 3000);
+            Form.FormRemove();
+            map__pins.innerHTML = "<div class='map__pinsoverlay'><h2>И снова Токио!</h2></div>"
+        }
+    };
 })();
